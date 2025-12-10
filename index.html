@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Квиз: Преступление и правонарушение</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, rgba(245, 241, 233, 0.95) 0%, rgba(230, 220, 200, 0.95) 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Затемнение для лучшей читаемости */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(245, 241, 233, 0.7);
+      z-index: -1;
+    }
+
+    /* Стили для фоновых изображений - РАЗНЫЕ РАЗМЕРЫ */
+    .character-bg {
+      position: fixed;
+      z-index: -1;
+      opacity: 0.7;
+      filter: grayscale(100%) sepia(20%) brightness(90%) contrast(110%);
+      transition: all 0.8s ease;
+      pointer-events: none;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      object-fit: cover;
+      border: 2px solid rgba(100, 100, 100, 0.3);
+    }
+
+    /* РАЗНЫЕ РАЗМЕРЫ КАРТИНОК И ХОРОШЕЕ РАСПРЕДЕЛЕНИЕ */
+    .character-1 {
+      top: 5%;
+      left: 2%;
+      width: 220px;  /* Средний размер */
+      height: 165px;
+      transform: rotate(-3deg);
+      animation: float1 40s ease-in-out infinite;
+    }
+
+    .character-2 {
+      top: 15%;
+      right: 2%;
+      width: 180px;  /* Маленький размер */
+      height: 135px;
+      transform: rotate(2deg);
+      animation: float2 35s ease-in-out infinite 5s;
+    }
+
+    .character-3 {
+      top: 40%;
+      left: 3%;
+      width: 250px;  /* Большой размер */
+      height: 188px;
+      transform: rotate(-4deg);
+      animation: float3 45s ease-in-out infinite 10s;
+    }
+
+    .character-4 {
+      bottom: 20%;
+      right: 1%;
+      width: 200px;  /* Средний размер */
+      height: 150px;
+      transform: rotate(3deg);
+      animation: float4 38s ease-in-out infinite 15s;
+    }
+
+    .character-5 {
+      top: 70%;
+      left: 4%;
+      width: 170px;  /* Маленький размер */
+      height: 128px;
+      transform: rotate(-2deg);
+      animation: float5 42s ease-in-out infinite 20s;
+    }
+
+    .character-6 {
+      bottom: 10%;
+      right: 4%;
+      width: 230px;  /* Большой размер */
+      height: 173px;
+      transform: rotate(4deg);
+      animation: float6 37s ease-in-out infinite 25s;
+    }
+
+    .character-7 {
+      top: 25%;
+      right: 15%;
+      width: 190px;  /* Средний размер */
+      height: 143px;
+      transform: rotate(-1deg);
+      animation: float7 43s ease-in-out infinite 30s;
+    }
+
+    .character-8 {
+      top: 60%;
+      right: 12%;
+      width: 210px;  /* Средний размер */
+      height: 158px;
+      transform: rotate(5deg);
+      animation: float8 39s ease-in-out infinite 35s;
+    }
+
+    .character-9 {
+      bottom: 5%;
+      left: 8%;
+      width: 240px;  /* Большой размер */
+      height: 180px;
+      transform: rotate(-5deg);
+      animation: float9 41s ease-in-out infinite 40s;
+    }
+
+    /* ПЛАВНЫЕ АНИМАЦИИ БЕЗ РЕЗКИХ ПОВОРОТОВ */
+    @keyframes float1 {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-30px) rotate(-3deg); }
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translateY(0) rotate(2deg); }
+      50% { transform: translateY(-25px) rotate(2deg); }
+    }
+
+    @keyframes float3 {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50% { transform: translateY(-35px) rotate(-4deg); }
+    }
+
+    @keyframes float4 {
+      0%, 100% { transform: translateY(0) rotate(3deg); }
+      50% { transform: translateY(-28px) rotate(3deg); }
+    }
+
+    @keyframes float5 {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-22px) rotate(-2deg); }
+    }
+
+    @keyframes float6 {
+      0%, 100% { transform: translateY(0) rotate(4deg); }
+      50% { transform: translateY(-32px) rotate(4deg); }
+    }
+
+    @keyframes float7 {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-26px) rotate(-1deg); }
+    }
+
+    @keyframes float8 {
+      0%, 100% { transform: translateY(0) rotate(5deg); }
+      50% { transform: translateY(-29px) rotate(5deg); }
+    }
+
+    @keyframes float9 {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-33px) rotate(-5deg); }
+    }
+
+    /* Остальные стили остаются без изменений */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      color: #1a3a52;
+      margin-bottom: 30px;
+      padding: 30px 0;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(200, 200, 200, 0.3);
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
+      color: #1a3a52;
+    }
+
+    .header p {
+      font-size: 1.1em;
+      opacity: 1;
+      color: #555;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+
+    .quiz-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      border-top: 4px solid #2c5f8d;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(200, 200, 200, 0.3);
+    }
+
+    /* Все остальные стили квиза остаются без изменений */
+    .question-block {
+      margin-bottom: 35px;
+      display: none;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .question-block.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .question-title {
+      font-size: 1.3em;
+      font-weight: 600;
+      color: #2c5f8d;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .question-number {
+      display: inline-block;
+      background: #2c5f8d;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      margin-right: 10px;
+    }
+
+    .options-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .available-answers {
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .answers-label {
+      font-weight: 600;
+      color: #2c5f8d;
+      margin-bottom: 10px;
+      font-size: 0.95em;
+    }
+
+    .answer-option {
+      background: #2c5f8d;
+      color: white;
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      cursor: move;
+      user-select: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(44, 95, 141, 0.2);
+      font-weight: 500;
+    }
+
+    .answer-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(44, 95, 141, 0.3);
+    }
+
+    .answer-option.dragging {
+      opacity: 0.7;
+    }
+
+    .answer-option.placed {
+      display: none;
+    }
+
+    .drop-zone {
+      padding: 15px;
+      background: #f9f9f9;
+      border: 2px dashed #bbb;
+      border-radius: 8px;
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .drop-zone-label {
+      font-weight: 600;
+      color: #2c5f8d;
+      margin-bottom: 10px;
+      font-size: 0.95em;
+    }
+
+    .drop-zone.drag-over {
+      background: #f0f5fa;
+      border-color: #2c5f8d;
+      box-shadow: inset 0 0 10px rgba(44, 95, 141, 0.1);
+    }
+
+    .placed-answer {
+      background: white;
+      color: #333;
+      padding: 10px 15px;
+      margin: 5px 0;
+      border-radius: 8px;
+      border-left: 4px solid #28a745;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .remove-btn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85em;
+      transition: background 0.3s;
+    }
+
+    .remove-btn:hover {
+      background: #ff5252;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+      justify-content: center;
+    }
+
+    button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-next {
+      background: #2c5f8d;
+      color: white;
+      flex: 1;
+      max-width: 200px;
+    }
+
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(44, 95, 141, 0.4);
+      background: #1f4560;
+    }
+
+    .btn-next:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-prev {
+      background: #e0e0e0;
+      color: #333;
+      flex: 1;
+      max-width: 200px;
+    }
+
+    .btn-prev:hover:not(:disabled) {
+      background: #d0d0d0;
+    }
+
+    .results-screen {
+      display: none;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .results-screen.active {
+      display: block;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .results-screen h2 {
+      color: #2c5f8d;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .score-display {
+      font-size: 3em;
+      color: #16a085;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .score-text {
+      font-size: 1.2em;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .result-message {
+      font-size: 1.1em;
+      color: #2c5f8d;
+      margin-bottom: 30px;
+      padding: 15px;
+      background: #f0f5fa;
+      border-radius: 10px;
+      border-left: 4px solid #2c5f8d;
+    }
+
+    .btn-restart {
+      background: #16a085;
+      color: white;
+      padding: 15px 40px;
+      font-size: 1.1em;
+      margin-top: 20px;
+    }
+
+    .btn-restart:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(22, 160, 133, 0.4);
+      background: #117a65;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #2c5f8d;
+      transition: width 0.3s ease;
+    }
+
+    .feedback-message {
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-top: 15px;
+      font-weight: 600;
+      text-align: center;
+      animation: slideDown 0.4s ease;
+      display: none;
+    }
+
+    .feedback-message.show {
+      display: block;
+    }
+
+    .feedback-correct {
+      background: #16a085;
+      color: white;
+      border-left: 5px solid #0d5f4f;
+    }
+
+    .feedback-incorrect {
+      background: #e74c3c;
+      color: white;
+      border-left: 5px solid #c0392b;
+    }
+
+    .correct-answers-list {
+      text-align: left;
+      margin-top: 12px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      font-size: 0.95em;
+      font-weight: 500;
+    }
+
+    .correct-answers-list div {
+      padding: 4px 0;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn-check {
+      background: #16a085;
+      color: white;
+      flex: 1;
+      max-width: 200px;
+      margin-right: 10px;
+    }
+
+    .btn-check:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(22, 160, 133, 0.4);
+      background: #117a65;
+    }
+
+    .btn-check:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .footer {
+      background: rgba(249, 249, 249, 0.9);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9em;
+      line-height: 1.6;
+      border: 1px solid #e0e0e0;
+      border-top: 3px solid #2c5f8d;
+      backdrop-filter: blur(10px);
+    }
+
+    .footer-title {
+      font-weight: 700;
+      color: #2c5f8d;
+      margin-bottom: 10px;
+    }
+
+    .footer-authors {
+      color: #16a085;
+      font-weight: 600;
+      margin: 8px 0;
+    }
+
+    .footer-source {
+      color: #555;
+      font-style: italic;
+      margin: 8px 0;
+    }
+
+    .empty-zone-text {
+      color: #999;
+      font-style: italic;
+    }
+
+    .separator {
+      height: 1px;
+      background: #e0e0e0;
+      margin: 15px 0;
+    }
+
+    .start-screen {
+      display: none;
+      text-align: center;
+      padding: 40px 30px;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .start-screen.active {
+      display: block;
+    }
+
+    .start-screen h1 {
+      color: #2c5f8d;
+      font-size: 2.8em;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
+    }
+
+    .start-screen p {
+      color: #555;
+      font-size: 1.05em;
+      margin-bottom: 30px;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+
+    .info-section {
+      background: rgba(249, 249, 249, 0.95);
+      border-radius: 8px;
+      padding: 25px;
+      margin: 25px 0;
+      border-left: 4px solid #2c5f8d;
+      text-align: left;
+    }
+
+    .info-title {
+      font-weight: 700;
+      color: #2c5f8d;
+      font-size: 1.1em;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .info-content {
+      color: #555;
+      line-height: 1.8;
+      font-size: 0.95em;
+    }
+
+    .info-content div {
+      margin: 8px 0;
+    }
+
+    .info-highlight {
+      color: #16a085;
+      font-weight: 600;
+    }
+
+    .btn-start {
+      background: #16a085;
+      color: white;
+      padding: 16px 50px;
+      font-size: 1.2em;
+      margin-top: 30px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(22, 160, 133, 0.4);
+      background: #117a65;
+    }
+
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: #2c5f8d;
+      margin: 20px auto;
+      border-radius: 1px;
+    }
+  </style>
+</head>
+<body>
+<!-- ФОНОВЫЕ ИЗОБРАЖЕНИЯ - РАЗНЫХ РАЗМЕРОВ И ХОРОШО РАСПРЕДЕЛЕННЫ -->
+<img src="bremenskie.jpg" class="character-bg character-1">
+<img src="dyadya-stepa.jpg" class="character-bg character-2">
+<img src="ernest.jpg" class="character-bg character-3">
+<img src="maigret.jpg" class="character-bg character-4">
+<img src="missis.jpg" class="character-bg character-5">
+<img src="poirot.jpg" class="character-bg character-6">
+<img src="pronin.jpg" class="character-bg character-7">
+<img src="solomin.jpg" class="character-bg character-8">
+<img src="watson.jpg" class="character-bg character-9">
+
+<div class="container">
+  <div class="header">
+    <h1>Квиз: Преступление и правонарушение</h1>
+    <p>Тест по учебному пособию "Правоведение"</p>
+  </div>
+
+  <div class="quiz-container">
+    <div class="start-screen active" id="startScreen">
+      <h1>Добро пожаловать!</h1>
+      <p>Проверьте свои знания по теме "Преступление и правонарушение"</p>
+
+      <div class="divider"></div>
+
+      <div class="info-section">
+        <div class="info-title">Квиз</div>
+        <div class="info-content">
+          <div>Тестирование по учебному материалу включает <span class="info-highlight">10 вопросов</span> с несколькими вариантами ответов</div>
+          <div>Для каждого вопроса необходимо выбрать <span class="info-highlight">все правильные ответы</span></div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="info-title">Источник</div>
+        <div class="info-content">
+          <div><span class="info-highlight">Малько, А.В., Субочев, В.В.</span></div>
+          <div>Правоведение: учебник / А.В. Малько, В.В. Субочев. — М.: Норма : ИНФРА-М, 2018.</div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="info-title">Авторы квиза</div>
+        <div class="info-content">
+          <div><span class="info-highlight">Коняшкин Никита, Тишков Илья</span></div>
+          <div>Группа: <span class="info-highlight">ПрИ-31</span></div>
+        </div>
+      </div>
+
+      <button class="btn-start" onclick="startQuiz()">Начать квиз</button>
+    </div>
+    <div class="quiz-screen" id="quizScreen" style="display: none;">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div id="quizContent">
+        <!-- Вопросы будут добавлены здесь -->
+      </div>
+
+      <div id="feedbackArea"></div>
+
+      <div class="button-group" id="buttonGroup" style="display: none;">
+        <button class="btn-prev" onclick="previousQuestion()">Предыдущий</button>
+        <button class="btn-check" id="checkBtn" onclick="checkAnswer()">Проверить ответ</button>
+        <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Следующий</button>
+      </div>
+    </div>
+
+    <div class="results-screen" id="resultsScreen">
+      <h2>Квиз завершён!</h2>
+      <div class="score-display" id="scoreDisplay">0/0</div>
+      <div class="score-text">Правильных ответов</div>
+      <div class="result-message" id="resultMessage"></div>
+      <button class="btn-restart" onclick="location.reload()">Пройти квиз заново</button>
+    </div>
+
+  </div>
+  <div class="footer">
+    <div class="footer-title">Информация об источнике:</div>
+    <div class="footer-source">Малько, А.В., Субочев, В.В. Правоведение: учебник / А.В. Малько, В.В. Субочев. — М.: Норма : ИНФРА-М, 2018.</div>
+    <div class="separator"></div>
+    <div class="footer-title">Авторы квиза:</div>
+    <div class="footer-authors">Коняшкин Никита, Тишков Илья</div>
+    <div style="color: #555; margin-top: 8px;">Группа: ПрИ-31</div>
+  </div>
+</div>
+
+<script>
+  const quizData = [
+    {
+      question: "Какие признаки характеризуют преступление?",
+      answers: [
+        { text: "Общественная опасность деяния", correct: true },
+        { text: "Нарушение административного регламента", correct: false },
+        { text: "Виновность действия", correct: true },
+        { text: "Запрет в уголовном кодексе", correct: true },
+        { text: "Нарушение внутреннего распорядка", correct: false }
+      ]
+    },
+    {
+      question: "Что отличает преступление от других правонарушений?",
+      answers: [
+        { text: "Высокая степень общественной опасности", correct: true },
+        { text: "Меньшая степень ответственности", correct: false },
+        { text: "Предусмотрено уголовным законодательством", correct: true },
+        { text: "Наказание назначается только судом", correct: true },
+        { text: "Может наказываться штрафом", correct: false }
+      ]
+    },
+    {
+      question: "Какие виды ответственности существуют за правонарушения?",
+      answers: [
+        { text: "Уголовная ответственность", correct: true },
+        { text: "Административная ответственность", correct: true },
+        { text: "Гражданско-правовая ответственность", correct: true },
+        { text: "Дисциплинарная ответственность", correct: true },
+        { text: "Моральная ответственность", correct: false }
+      ]
+    },
+    {
+      question: "Какие деяния являются правонарушениями?",
+      answers: [
+        { text: "Действия, противоречащие нормам права", correct: true },
+        { text: "Бездействие, когда требовалось действие", correct: true },
+        { text: "Деяния, совершённые малолетним ребёнком", correct: false },
+        { text: "Противоправное, виновное и общественно опасное поведение", correct: true },
+        { text: "Любое нарушение правил вежливости", correct: false }
+      ]
+    },
+    {
+      question: "Какие из следующих действий квалифицируются как преступления?",
+      answers: [
+        { text: "Кража имущества", correct: true },
+        { text: "Убийство человека", correct: true },
+        { text: "Опоздание на работу", correct: false },
+        { text: "Разбой с применением насилия", correct: true },
+        { text: "Нарушение ПДД без последствий", correct: false }
+      ]
+    },
+    {
+      question: "В чём разница между проступком и преступлением?",
+      answers: [
+        { text: "Преступление имеет большую общественную опасность", correct: true },
+        { text: "Проступок влечёт административную ответственность", correct: true },
+        { text: "Преступление регулируется уголовным кодексом", correct: true },
+        { text: "Они совершаются разными лицами", correct: false },
+        { text: "Проступок менее опасен для общества", correct: true }
+      ]
+    },
+    {
+      question: "Какие элементы входят в состав преступления?",
+      answers: [
+        { text: "Объект преступления", correct: true },
+        { text: "Объективная сторона", correct: true },
+        { text: "Субъект преступления", correct: true },
+        { text: "Субъективная сторона (вина)", correct: true },
+        { text: "Возраст потерпевшего", correct: false }
+      ]
+    },
+    {
+      question: "Какие из перечисленных действий являются административными правонарушениями?",
+      answers: [
+        { text: "Нарушение правил дорожного движения", correct: true },
+        { text: "Нарушение санитарных правил", correct: true },
+        { text: "Убийство человека", correct: false },
+        { text: "Появление в общественном месте в нетрезвом виде", correct: true },
+        { text: "Неправомерное присвоение чужого имущества в крупном размере", correct: false }
+      ]
+    },
+    {
+      question: "С какого возраста наступает уголовная ответственность?",
+      answers: [
+        { text: "С 16 лет за большинство преступлений", correct: true },
+        { text: "С 18 лет за все преступления", correct: false },
+        { text: "С 14 лет за особо тяжкие преступления", correct: true },
+        { text: "С 12 лет за административные нарушения", correct: false },
+        { text: "С 14 лет за убийство и насилие", correct: true }
+      ]
+    },
+    {
+      question: "Какие из следующих характеристик определяют понятие 'преступление'?",
+      answers: [
+        { text: "Виновное деяние", correct: true },
+        { text: "Противоправность (запрещено законом)", correct: true },
+        { text: "Общественная опасность", correct: true },
+        { text: "Наказуемость по уголовному закону", correct: true },
+        { text: "Совершено в состоянии аффекта", correct: false }
+      ]
+    }
+  ];
+
+  let currentQuestion = 0;
+  let userAnswers = {};
+  let draggedElement = null;
+  let answersChecked = {};
+
+  function startQuiz() {
+    document.getElementById('startScreen').classList.remove('active');
+    document.getElementById('quizScreen').style.display = 'block';
+    renderQuestion();
+    document.getElementById('buttonGroup').style.display = 'flex';
+  }
+
+  function renderQuestion() {
+    const quiz = quizData[currentQuestion];
+    const container = document.getElementById('quizContent');
+
+    // Очищаем контейнер
+    container.innerHTML = '';
+
+    // Перемешиваем ответы
+    const shuffledAnswers = [...quiz.answers].sort(() => Math.random() - 0.5);
+
+    const questionHTML = `
+                <div class="question-block active">
+                    <div class="question-title">
+                        <span class="question-number">Вопрос ${currentQuestion + 1}/${quizData.length}</span>
+                        ${quiz.question}
+                    </div>
+
+                    <div class="options-section">
+                        <div>
+                            <div class="available-answers">
+                                <div class="answers-label">Доступные ответы</div>
+                                <div id="availableAnswers">
+                                    ${shuffledAnswers.map((ans, idx) => `
+                                        <div class="answer-option"
+                                             draggable="true"
+                                             data-answer="${ans.text}"
+                                             data-correct="${ans.correct}"
+                                             data-id="ans-${currentQuestion}-${idx}"
+                                             ondragstart="dragStart(event)"
+                                             ondragend="dragEnd(event)">
+                                            ${ans.text}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="drop-zone" id="dropZone"
+                                 ondragover="dragOver(event)"
+                                 ondragleave="dragLeave(event)"
+                                 ondrop="drop(event)">
+                                <div class="drop-zone-label">Ваши ответы</div>
+                                <div id="placedAnswers">
+                                    <div class="empty-zone-text">Перетащите ответы сюда...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+    container.innerHTML = questionHTML;
+
+    // Восстанавливаем сохранённые ответы
+    if (userAnswers[currentQuestion]) {
+      userAnswers[currentQuestion].forEach(ans => {
+        const element = document.querySelector(`[data-answer="${ans}"]`);
+        if (element) {
+          addToDropZone(element);
+        }
+      });
+    }
+
+    updateProgress();
+    updateButtonStates();
+  }
+
+  function dragStart(e) {
+    draggedElement = e.target;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function dragEnd(e) {
+    e.target.classList.remove('dragging');
+  }
+
+  function dragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    document.getElementById('dropZone').classList.add('drag-over');
+  }
+
+  function dragLeave(e) {
+    document.getElementById('dropZone').classList.remove('drag-over');
+  }
+
+  function drop(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.remove('drag-over');
+
+    if (draggedElement) {
+      addToDropZone(draggedElement);
+    }
+  }
+
+  function addToDropZone(element) {
+    const answer = element.getAttribute('data-answer');
+    const placedAnswers = document.getElementById('placedAnswers');
+
+    // Проверяем, нет ли уже этого ответа
+    if (placedAnswers.querySelector(`[data-answer="${answer}"]`)) {
+      return;
+    }
+
+    // Если это первый элемент, очищаем текст
+    if (placedAnswers.querySelector('.empty-zone-text')) {
+      placedAnswers.innerHTML = '';
+    }
+
+    const placedDiv = document.createElement('div');
+    placedDiv.className = 'placed-answer';
+    placedDiv.setAttribute('data-answer', answer);
+    placedDiv.innerHTML = `
+                <span>${answer}</span>
+                <button class="remove-btn" onclick="removeAnswer('${answer}')">Удалить</button>
+            `;
+
+    placedAnswers.appendChild(placedDiv);
+
+    // Скрываем исходный элемент
+    element.classList.add('placed');
+
+    // Сохраняем ответ
+    if (!userAnswers[currentQuestion]) {
+      userAnswers[currentQuestion] = [];
+    }
+    if (!userAnswers[currentQuestion].includes(answer)) {
+      userAnswers[currentQuestion].push(answer);
+    }
+  }
+
+  function removeAnswer(answer) {
+    const placed = document.querySelector(`#placedAnswers [data-answer="${answer}"]`);
+    if (placed) {
+      placed.remove();
+    }
+
+    // Показываем исходный элемент
+    const original = document.querySelector(`[data-answer="${answer}"]`);
+    if (original) {
+      original.classList.remove('placed');
+    }
+
+    userAnswers[currentQuestion] = userAnswers[currentQuestion].filter(a => a !== answer);
+
+    if (document.getElementById('placedAnswers').children.length === 0) {
+      document.getElementById('placedAnswers').innerHTML = '<div class="empty-zone-text">Перетащите ответы сюда...</div>';
+    }
+  }
+
+  function updateProgress() {
+    const progress = ((currentQuestion + 1) / quizData.length) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+  }
+
+  function updateButtonStates() {
+    const prevBtn = document.querySelector('.btn-prev');
+    const nextBtn = document.getElementById('nextBtn');
+    const checkBtn = document.getElementById('checkBtn');
+
+    prevBtn.disabled = currentQuestion === 0;
+
+    if (currentQuestion === quizData.length - 1) {
+      nextBtn.textContent = 'Завершить';
+    } else {
+      nextBtn.textContent = 'Следующий';
+    }
+
+    checkBtn.disabled = !userAnswers[currentQuestion] || userAnswers[currentQuestion].length === 0;
+  }
+
+  function checkAnswer() {
+    const question = quizData[currentQuestion];
+    const userAns = userAnswers[currentQuestion] || [];
+
+    const correctAnswers = question.answers
+            .filter(ans => ans.correct)
+            .map(ans => ans.text);
+
+    const isCorrect = JSON.stringify(userAns.sort()) === JSON.stringify(correctAnswers.sort());
+    answersChecked[currentQuestion] = isCorrect;
+
+    const feedbackArea = document.getElementById('feedbackArea');
+    feedbackArea.innerHTML = '';
+
+    const feedback = document.createElement('div');
+    feedback.className = `feedback-message show ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+
+    if (isCorrect) {
+      feedback.innerHTML = '<strong>Правильно!</strong> Вы выбрали все верные ответы.';
+    } else {
+      let html = '<strong>Неправильно.</strong> Правильные ответы:<div class="correct-answers-list">';
+      correctAnswers.forEach(ans => {
+        html += `<div>• ${ans}</div>`;
+      });
+      html += '</div>';
+      feedback.innerHTML = html;
+    }
+
+    feedbackArea.appendChild(feedback);
+    document.getElementById('nextBtn').focus();
+  }
+
+  function nextQuestion() {
+    if (currentQuestion < quizData.length - 1) {
+      currentQuestion++;
+      document.getElementById('feedbackArea').innerHTML = '';
+      renderQuestion();
+      window.scrollTo(0, 0);
+    } else {
+      showResults();
+    }
+  }
+
+  function previousQuestion() {
+    if (currentQuestion > 0) {
+      currentQuestion--;
+      renderQuestion();
+      window.scrollTo(0, 0);
+    }
+  }
+
+  function showResults() {
+    let correctCount = 0;
+
+    for (let qIdx = 0; qIdx < quizData.length; qIdx++) {
+      const question = quizData[qIdx];
+      const userAns = userAnswers[qIdx] || [];
+
+      const correctAnswers = question.answers
+              .filter(ans => ans.correct)
+              .map(ans => ans.text);
+
+      if (JSON.stringify(userAns.sort()) === JSON.stringify(correctAnswers.sort())) {
+        correctCount++;
+      }
+    }
+
+    const percentage = Math.round((correctCount / quizData.length) * 100);
+    document.getElementById('scoreDisplay').textContent = `${correctCount}/${quizData.length}`;
+
+    let message = '';
+    if (percentage === 100) {
+      message = 'Отлично! Вы отлично знаете материал!';
+    } else if (percentage >= 80) {
+      message = 'Хорошо! Вы хорошо освоили тему.';
+    } else if (percentage >= 60) {
+      message = 'Не плохо! Рекомендуем повторить материал.';
+    } else {
+      message = 'Рекомендуем тщательнее изучить тему.';
+    }
+
+    document.getElementById('resultMessage').textContent = message + ` (${percentage}%)`;
+
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('buttonGroup').style.display = 'none';
+    document.getElementById('resultsScreen').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Инициализация при загрузке страницы
+  window.addEventListener('DOMContentLoaded', function() {
+    // Инициализация уже выполнена в объявлении переменных
+  });
+</script>
+</body>
+</html>
