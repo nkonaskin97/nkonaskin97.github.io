@@ -113,6 +113,206 @@ function startQuiz() {
     document.getElementById('buttonGroup').style.display = 'flex';
 }
 
+// Добавить эти функции в существующий скрипт после renderQuestion() функции
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+let activeTouchElement = null;
+
+function handleTouchStart(e) {
+    if (e.target.classList.contains('answer-option') && !e.target.classList.contains('placed')) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        activeTouchElement = e.target;
+        e.target.classList.add('dragging');
+        e.preventDefault();
+    }
+}
+
+function handleTouchMove(e) {
+    if (activeTouchElement) {
+        touchEndX = e.touches[0].clientX;
+        touchEndY = e.touches[0].clientY;
+        e.preventDefault();
+    }
+}
+
+function handleTouchEnd(e) {
+    if (activeTouchElement) {
+        activeTouchElement.classList.remove('dragging');
+
+        // Проверяем, был ли это drag-жест (движение больше 10px)
+        const diffX = Math.abs(touchEndX - touchStartX);
+        const diffY = Math.abs(touchEndY - touchStartY);
+
+        // Если движение было достаточно большим, считаем это drag-жестом
+        if (diffX > 10 || diffY > 10) {
+            // Ищем ближайшую drop-зону
+            const dropZone = document.getElementById('dropZone');
+            const rect = dropZone.getBoundingClientRect();
+
+            // Проверяем, попал ли палец в зону drop-зоны
+            if (touchEndX >= rect.left && touchEndX <= rect.right &&
+                touchEndY >= rect.top && touchEndY <= rect.bottom) {
+                addToDropZone(activeTouchElement);
+            }
+        } else {
+            // Если движение было маленьким, считаем это кликом
+            addToDropZone(activeTouchElement);
+        }
+
+        activeTouchElement = null;
+        e.preventDefault();
+    }
+}
+
+// Функция для мобильного удаления ответов
+function handleMobileRemove(e, answer) {
+    e.preventDefault();
+    e.stopPropagation();
+    removeAnswer(answer);
+}
+
+// Обновить функцию addToDropZone для поддержки мобильных устройств
+function addToDropZone(element) {
+    const answer = element.getAttribute('data-answer');
+    const placedAnswers = document.getElementById('placedAnswers');
+
+    // Проверяем, нет ли уже этого ответа
+    if (placedAnswers.querySelector(`[data-answer="${answer}"]`)) {
+        return;
+    }
+
+    // Если это первый элемент, очищаем текст
+    if (placedAnswers.querySelector('.empty-zone-text')) {
+        placedAnswers.innerHTML = '';
+    }
+
+    const placedDiv = document.createElement('div');
+    placedDiv.className = 'placed-answer';
+    placedDiv.setAttribute('data-answer', answer);
+    placedDiv.innerHTML = `
+        <span>${answer}</span>
+        <button class="remove-btn" 
+                onclick="handleMobileRemove(event, '${answer}')"
+                ontouchstart="handleMobileRemove(event, '${answer}')">
+            Удалить
+        </button>
+    `;
+
+    placedAnswers.appendChild(placedDiv);
+
+    // Скрываем исходный элемент
+    element.classList.add('placed');
+
+    // Сохраняем ответ
+    if (!userAnswers[currentQuestion]) {
+        userAnswers[currentQuestion] = [];
+    }
+    if (!userAnswers[currentQuestion].includes(answer)) {
+        userAnswers[currentQuestion].push(answer);
+    }
+
+    updateButtonStates();
+}
+
+// Обновить функцию renderQuestion для добавления сенсорных событий
+function renderQuestion() {
+    const quiz = quizData[currentQuestion];
+    const container = document.getElementById('quizContent');
+
+    // Очищаем контейнер
+    container.innerHTML = '';
+
+    // Перемешиваем ответы
+    const shuffledAnswers = [...quiz.answers].sort(() => Math.random() - 0.5);
+
+    const questionHTML = `
+        <div class="question-block active">
+            <div class="question-title">
+                <span class="question-number">Вопрос ${currentQuestion + 1}/${quizData.length}</span>
+                ${quiz.question}
+            </div>
+            
+            <div class="options-section">
+                <div>
+                    <div class="available-answers">
+                        <div class="answers-label">Доступные ответы</div>
+                        <div id="availableAnswers">
+                            ${shuffledAnswers.map((ans, idx) => `
+                                <div class="answer-option" 
+                                     draggable="true" 
+                                     data-answer="${ans.text}"
+                                     data-correct="${ans.correct}"
+                                     data-id="ans-${currentQuestion}-${idx}"
+                                     ondragstart="dragStart(event)"
+                                     ondragend="dragEnd(event)"
+                                     ontouchstart="handleTouchStart(event)"
+                                     ontouchmove="handleTouchMove(event)"
+                                     ontouchend="handleTouchEnd(event)">
+                                    ${ans.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="drop-zone" id="dropZone"
+                         ondragover="dragOver(event)"
+                         ondragleave="dragLeave(event)"
+                         ondrop="drop(event)">
+                        <div class="drop-zone-label">Ваши ответы</div>
+                        <div id="placedAnswers">
+                            <div class="empty-zone-text">Перетащите или нажмите на ответы...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = questionHTML;
+
+    // Восстанавливаем сохранённые ответы
+    if (userAnswers[currentQuestion]) {
+        userAnswers[currentQuestion].forEach(ans => {
+            const element = document.querySelector(`[data-answer="${ans}"]`);
+            if (element) {
+                addToDropZone(element);
+            }
+        });
+    }
+
+    updateProgress();
+    updateButtonStates();
+}
+
+// Добавить обработчики для всего документа
+document.addEventListener('touchmove', function(e) {
+    if (activeTouchElement) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+// Обновить текст для мобильных устройств
+function updateForMobile() {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+        const emptyText = document.querySelector('.empty-zone-text');
+        if (emptyText) {
+            emptyText.textContent = 'Нажмите на ответы...';
+        }
+    }
+}
+
+// Вызвать при загрузке
+window.addEventListener('DOMContentLoaded', function() {
+    updateForMobile();
+});
+
 function renderQuestion() {
     const quiz = quizData[currentQuestion];
     const container = document.getElementById('quizContent');
