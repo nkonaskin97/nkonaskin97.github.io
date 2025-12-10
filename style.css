@@ -59,6 +59,51 @@ body {
 .question-block.active {
     display: block;
 }
+@media (hover: none) and (pointer: coarse) {
+    .answer-option {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .answer-option:active {
+        transform: scale(0.98);
+        opacity: 0.8;
+    }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .options-section {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .available-answers, .drop-zone {
+        min-height: 50px;
+    }
+
+    .character-bg {
+        display: none; /* Скрыть фоновые картинки на мобильных */
+    }
+
+    .answer-option {
+        padding: 15px;
+        margin-bottom: 10px;
+        font-size: 0.95em;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-prev, .btn-check, .btn-next {
+        max-width: 100%;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
 
 @keyframes fadeIn {
     from {
