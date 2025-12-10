@@ -103,6 +103,338 @@ const quizData = [
 
 let currentQuestion = 0;
 let userAnswers = {};
+let isMobile = false;
+
+// Определяем мобильное устройство при загрузке
+function detectMobile() {
+    isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return isMobile;
+}
+
+function startQuiz() {
+    document.getElementById('startScreen').classList.remove('active');
+    document.getElementById('quizScreen').style.display = 'block';
+    renderQuestion();
+    document.getElementById('buttonGroup').style.display = 'flex';
+}
+
+function renderQuestion() {
+    const quiz = quizData[currentQuestion];
+    const container = document.getElementById('quizContent');
+
+    container.innerHTML = '';
+
+    const shuffledAnswers = [...quiz.answers].sort(() => Math.random() - 0.5);
+
+    const questionHTML = `
+        <div class="question-block active">
+            <div class="question-title">
+                <span class="question-number">Вопрос ${currentQuestion + 1}/${quizData.length}</span>
+                ${quiz.question}
+            </div>
+            
+            <div class="options-section">
+                <div>
+                    <div class="available-answers">
+                        <div class="answers-label">${isMobile ? 'Нажмите на ответ чтобы выбрать' : 'Доступные ответы'}</div>
+                        <div id="availableAnswers">
+                            ${shuffledAnswers.map((ans, idx) => `
+                                <div class="answer-option ${isMobile ? 'mobile-option' : ''}" 
+                                     draggable="${!isMobile}" 
+                                     data-answer="${ans.text}"
+                                     data-correct="${ans.correct}"
+                                     data-id="ans-${currentQuestion}-${idx}"
+                                     ${isMobile ? `onclick="toggleMobileAnswer('${ans.text}')"` : `ondragstart="dragStart(event)" ondragend="dragEnd(event)"`}>
+                                    ${ans.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="drop-zone" id="dropZone"
+                         ${!isMobile ? 'ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)"' : ''}>
+                        <div class="drop-zone-label">${isMobile ? 'Выбранные ответы (нажмите чтобы удалить)' : 'Ваши ответы'}</div>
+                        <div id="placedAnswers">
+                            <div class="empty-zone-text">${isMobile ? 'Ответы появятся здесь' : 'Перетащите ответы сюда...'}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = questionHTML;
+
+    // Восстанавливаем сохранённые ответы
+    if (userAnswers[currentQuestion]) {
+        userAnswers[currentQuestion].forEach(ans => {
+            const element = document.querySelector(`[data-answer="${ans}"]`);
+            if (element) {
+                addToDropZone(element);
+            }
+        });
+    }
+
+    updateProgress();
+    updateButtonStates();
+}
+
+// Функция для мобильных: переключение ответа (добавить/удалить)
+function toggleMobileAnswer(answerText) {
+    const element = document.querySelector(`[data-answer="${answerText}"]`);
+    const placedDiv = document.querySelector(`#placedAnswers [data-answer="${answerText}"]`);
+
+    if (placedDiv) {
+        // Если ответ уже выбран - удаляем его
+        removeAnswer(answerText);
+    } else {
+        // Если ответ не выбран - добавляем его
+        addToDropZone(element);
+    }
+}
+
+// Мобильная версия addToDropZone
+function addToDropZone(element) {
+    if (!element) return;
+
+    const answer = element.getAttribute('data-answer');
+    const placedAnswers = document.getElementById('placedAnswers');
+
+    // Проверяем, нет ли уже этого ответа
+    if (placedAnswers.querySelector(`[data-answer="${answer}"]`)) {
+        return;
+    }
+
+    // Если это первый элемент, очищаем текст
+    if (placedAnswers.querySelector('.empty-zone-text')) {
+        placedAnswers.innerHTML = '';
+    }
+
+    const placedDiv = document.createElement('div');
+    placedDiv.className = 'placed-answer';
+    placedDiv.setAttribute('data-answer', answer);
+
+    if (isMobile) {
+        // Для мобильных: просто текст, при нажатии удаляется
+        placedDiv.innerHTML = `
+            <span>${answer}</span>
+            <span style="color: #ff6b6b; font-size: 0.9em;">(нажмите чтобы удалить)</span>
+        `;
+        placedDiv.onclick = function() {
+            removeAnswer(answer);
+        };
+    } else {
+        // Для десктопа: с кнопкой удаления
+        placedDiv.innerHTML = `
+            <span>${answer}</span>
+            <button class="remove-btn" onclick="removeAnswer('${answer}')">Удалить</button>
+        `;
+    }
+
+    placedAnswers.appendChild(placedDiv);
+
+    // Для мобильных не скрываем элемент, а меняем его стиль
+    if (isMobile) {
+        element.style.opacity = '0.5';
+        element.style.backgroundColor = '#3a6b9f';
+        element.style.textDecoration = 'line-through';
+    } else {
+        element.classList.add('placed');
+    }
+
+    // Сохраняем ответ
+    if (!userAnswers[currentQuestion]) {
+        userAnswers[currentQuestion] = [];
+    }
+    if (!userAnswers[currentQuestion].includes(answer)) {
+        userAnswers[currentQuestion].push(answer);
+    }
+
+    updateButtonStates();
+}
+
+function removeAnswer(answer) {
+    const placed = document.querySelector(`#placedAnswers [data-answer="${answer}"]`);
+    if (placed) {
+        placed.remove();
+    }
+
+    // Восстанавливаем исходный элемент
+    const original = document.querySelector(`[data-answer="${answer}"]`);
+    if (original) {
+        if (isMobile) {
+            original.style.opacity = '1';
+            original.style.backgroundColor = '';
+            original.style.textDecoration = '';
+        } else {
+            original.classList.remove('placed');
+        }
+    }
+
+    userAnswers[currentQuestion] = userAnswers[currentQuestion].filter(a => a !== answer);
+
+    if (document.getElementById('placedAnswers').children.length === 0) {
+        document.getElementById('placedAnswers').innerHTML =
+            `<div class="empty-zone-text">${isMobile ? 'Ответы появятся здесь' : 'Перетащите ответы сюда...'}</div>`;
+    }
+
+    updateButtonStates();
+}
+
+// Остальные функции остаются без изменений, но добавляем isMobile проверки:
+
+function dragStart(e) {
+    if (isMobile) return;
+    draggedElement = e.target;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function dragEnd(e) {
+    if (isMobile) return;
+    e.target.classList.remove('dragging');
+}
+
+function dragOver(e) {
+    if (isMobile) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    document.getElementById('dropZone').classList.add('drag-over');
+}
+
+function dragLeave(e) {
+    if (isMobile) return;
+    document.getElementById('dropZone').classList.remove('drag-over');
+}
+
+function drop(e) {
+    if (isMobile) return;
+    e.preventDefault();
+    document.getElementById('dropZone').classList.remove('drag-over');
+
+    if (draggedElement) {
+        addToDropZone(draggedElement);
+    }
+}
+
+function updateProgress() {
+    const progress = ((currentQuestion + 1) / quizData.length) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+}
+
+function updateButtonStates() {
+    const prevBtn = document.querySelector('.btn-prev');
+    const nextBtn = document.getElementById('nextBtn');
+    const checkBtn = document.getElementById('checkBtn');
+
+    prevBtn.disabled = currentQuestion === 0;
+
+    if (currentQuestion === quizData.length - 1) {
+        nextBtn.textContent = 'Завершить';
+    } else {
+        nextBtn.textContent = 'Следующий';
+    }
+
+    checkBtn.disabled = !userAnswers[currentQuestion] || userAnswers[currentQuestion].length === 0;
+}
+
+function checkAnswer() {
+    const question = quizData[currentQuestion];
+    const userAns = userAnswers[currentQuestion] || [];
+
+    const correctAnswers = question.answers
+        .filter(ans => ans.correct)
+        .map(ans => ans.text);
+
+    const isCorrect = JSON.stringify(userAns.sort()) === JSON.stringify(correctAnswers.sort());
+
+    const feedbackArea = document.getElementById('feedbackArea');
+    feedbackArea.innerHTML = '';
+
+    const feedback = document.createElement('div');
+    feedback.className = `feedback-message show ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+
+    if (isCorrect) {
+        feedback.innerHTML = '<strong>Правильно!</strong> Вы выбрали все верные ответы.';
+    } else {
+        let html = '<strong>Неправильно.</strong> Правильные ответы:<div class="correct-answers-list">';
+        correctAnswers.forEach(ans => {
+            html += `<div>• ${ans}</div>`;
+        });
+        html += '</div>';
+        feedback.innerHTML = html;
+    }
+
+    feedbackArea.appendChild(feedback);
+    document.getElementById('nextBtn').focus();
+}
+
+function nextQuestion() {
+    if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        document.getElementById('feedbackArea').innerHTML = '';
+        renderQuestion();
+        window.scrollTo(0, 0);
+    } else {
+        showResults();
+    }
+}
+
+function previousQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+        window.scrollTo(0, 0);
+    }
+}
+
+function showResults() {
+    let correctCount = 0;
+
+    for (let qIdx = 0; qIdx < quizData.length; qIdx++) {
+        const question = quizData[qIdx];
+        const userAns = userAnswers[qIdx] || [];
+
+        const correctAnswers = question.answers
+            .filter(ans => ans.correct)
+            .map(ans => ans.text);
+
+        if (JSON.stringify(userAns.sort()) === JSON.stringify(correctAnswers.sort())) {
+            correctCount++;
+        }
+    }
+
+    const percentage = Math.round((correctCount / quizData.length) * 100);
+    document.getElementById('scoreDisplay').textContent = `${correctCount}/${quizData.length}`;
+
+    let message = '';
+    if (percentage === 100) {
+        message = 'Отлично! Вы отлично знаете материал!';
+    } else if (percentage >= 80) {
+        message = 'Хорошо! Вы хорошо освоили тему.';
+    } else if (percentage >= 60) {
+        message = 'Не плохо! Рекомендуем повторить материал.';
+    } else {
+        message = 'Рекомендуем тщательнее изучить тему.';
+    }
+
+    document.getElementById('resultMessage').textContent = message + ` (${percentage}%)`;
+
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('buttonGroup').style.display = 'none';
+    document.getElementById('resultsScreen').classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+// Инициализация при загрузке страницы
+window.addEventListener('DOMContentLoaded', function() {
+    detectMobile();
+});
+
+let currentQuestion = 0;
+let userAnswers = {};
 let draggedElement = null;
 let answersChecked = {};
 
