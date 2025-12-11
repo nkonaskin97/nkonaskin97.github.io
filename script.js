@@ -12,6 +12,41 @@ const quizData = [
     // ... остальные вопросы (скопируй из своего файла) ...
 ];
 
+function updateButtonStates() {
+    console.log("updateButtonStates вызвана!"); // Для отладки
+    
+    const prevBtn = document.querySelector('.btn-prev');
+    const nextBtn = document.getElementById('nextBtn');
+    const checkBtn = document.getElementById('checkBtn');
+    
+    // Кнопка "Назад" активна, если не первый вопрос
+    prevBtn.disabled = currentQuestion === 0;
+    
+    // Текст кнопки "Далее"
+    if (currentQuestion === quizData.length - 1) {
+        nextBtn.textContent = 'Завершить';
+    } else {
+        nextBtn.textContent = 'Следующий';
+    }
+    
+    // ВАЖНО: кнопка "Проверить ответ" активна только если есть выбранные ответы
+    const hasAnswers = userAnswers[currentQuestion] && userAnswers[currentQuestion].length > 0;
+    console.log("Есть выбранные ответы?", hasAnswers);
+    
+    checkBtn.disabled = !hasAnswers;
+    
+    // Визуальная обратная связь
+    if (checkBtn.disabled) {
+        checkBtn.style.opacity = '0.6';
+        checkBtn.style.cursor = 'not-allowed';
+        checkBtn.title = 'Сначала выберите ответы';
+    } else {
+        checkBtn.style.opacity = '1';
+        checkBtn.style.cursor = 'pointer';
+        checkBtn.title = 'Проверить выбранные ответы';
+    }
+}
+
 // Глобальные переменные
 let currentQuestion = 0;
 let userAnswers = {};
@@ -494,4 +529,5 @@ window.dragStart = dragStart;
 window.dragOver = dragOver;
 window.dragLeave = dragLeave;
 window.drop = drop;
+
 
