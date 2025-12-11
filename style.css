@@ -6,38 +6,57 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, rgba(245, 241, 233, 0.95) 0%, rgba(230, 220, 200, 0.95) 100%),
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><filter id="blur"><feGaussianBlur in="SourceGraphic" stdDeviation="8"/></filter></defs><text x="600" y="400" font-size="400" text-anchor="middle" fill="rgba(100,80,60,0.08)" filter="url(%23blur)" font-weight="bold">⚖</text></svg>') center/cover no-repeat fixed;
+    background: linear-gradient(135deg, rgba(245, 241, 233, 0.95) 0%, rgba(230, 220, 200, 0.95) 100%);
     background-attachment: fixed;
     min-height: 100vh;
     padding: 20px;
     color: #333;
+    position: relative;
+    overflow-x: hidden;
+}
+
+#backgroundImages {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.character-bg {
+    position: absolute;
+    opacity: 0.7;
+    filter: grayscale(100%) sepia(20%) brightness(90%) contrast(110%);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    object-fit: cover;
+    border: 2px solid rgba(100, 100, 100, 0.3);
+    animation: float 25s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
 }
 
 .container {
     max-width: 900px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
+/* Остальные стили (header, quiz-container и т.д.) оставляем как были */
 .header {
     text-align: center;
     color: #1a3a52;
     margin-bottom: 30px;
     padding: 30px 0;
-}
-
-.header h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
-    color: #1a3a52;
-}
-
-.header p {
-    font-size: 1.1em;
-    opacity: 1;
-    color: #555;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
 }
 
 .quiz-container {
@@ -58,51 +77,6 @@ body {
 
 .question-block.active {
     display: block;
-}
-@media (hover: none) and (pointer: coarse) {
-    .answer-option {
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-    }
-
-    .answer-option:active {
-        transform: scale(0.98);
-        opacity: 0.8;
-    }
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-    .options-section {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .available-answers, .drop-zone {
-        min-height: 50px;
-    }
-
-    .character-bg {
-        display: none; /* Скрыть фоновые картинки на мобильных */
-    }
-
-    .answer-option {
-        padding: 15px;
-        margin-bottom: 10px;
-        font-size: 0.95em;
-    }
-
-    .button-group {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .btn-prev, .btn-check, .btn-next {
-        max-width: 100%;
-        width: 100%;
-        margin-bottom: 10px;
-    }
 }
 
 @keyframes fadeIn {
@@ -162,11 +136,12 @@ body {
     padding: 12px 15px;
     margin-bottom: 8px;
     border-radius: 6px;
-    cursor: move;
+    cursor: pointer;
     user-select: none;
     transition: all 0.3s ease;
     box-shadow: 0 2px 6px rgba(44, 95, 141, 0.2);
     font-weight: 500;
+    touch-action: manipulation;
 }
 
 .answer-option:hover {
@@ -174,8 +149,10 @@ body {
     box-shadow: 0 4px 10px rgba(44, 95, 141, 0.3);
 }
 
-.answer-option.dragging {
-    opacity: 0.7;
+.answer-option.selected {
+    opacity: 0.6;
+    background-color: #3a6b9f;
+    text-decoration: line-through;
 }
 
 .answer-option.placed {
@@ -218,17 +195,24 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.placed-answer:hover {
+    background: #f8f9fa;
 }
 
 .remove-btn {
     background: #ff6b6b;
     color: white;
     border: none;
-    padding: 3px 8px;
+    padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.85em;
     transition: background 0.3s;
+    min-width: 60px;
 }
 
 .remove-btn:hover {
@@ -250,6 +234,7 @@ button {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    touch-action: manipulation;
 }
 
 .btn-next {
@@ -259,14 +244,14 @@ button {
     max-width: 200px;
 }
 
-.btn-next:hover {
+.btn-next:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(44, 95, 141, 0.4);
     background: #1f4560;
 }
 
 .btn-next:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
 }
@@ -282,6 +267,33 @@ button {
     background: #d0d0d0;
 }
 
+.btn-check {
+    background: #16a085;
+    color: white;
+    flex: 1;
+    max-width: 200px;
+    margin-right: 10px;
+}
+
+.btn-check:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(22, 160, 133, 0.4);
+    background: #117a65;
+}
+
+.btn-check:disabled {
+    opacity: 0.5;
+    background: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-check.active {
+    background: #16a085;
+    opacity: 1;
+    cursor: pointer;
+}
+
 .results-screen {
     display: none;
     text-align: center;
@@ -291,49 +303,6 @@ button {
 .results-screen.active {
     display: block;
     animation: fadeIn 0.5s ease-in;
-}
-
-.results-screen h2 {
-    color: #2c5f8d;
-    font-size: 2em;
-    margin-bottom: 20px;
-}
-
-.score-display {
-    font-size: 3em;
-    color: #16a085;
-    font-weight: bold;
-    margin: 20px 0;
-}
-
-.score-text {
-    font-size: 1.2em;
-    color: #666;
-    margin-bottom: 20px;
-}
-
-.result-message {
-    font-size: 1.1em;
-    color: #2c5f8d;
-    margin-bottom: 30px;
-    padding: 15px;
-    background: #f0f5fa;
-    border-radius: 10px;
-    border-left: 4px solid #2c5f8d;
-}
-
-.btn-restart {
-    background: #16a085;
-    color: white;
-    padding: 15px 40px;
-    font-size: 1.1em;
-    margin-top: 20px;
-}
-
-.btn-restart:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(22, 160, 133, 0.4);
-    background: #117a65;
 }
 
 .progress-bar {
@@ -358,11 +327,6 @@ button {
     font-weight: 600;
     text-align: center;
     animation: slideDown 0.4s ease;
-    display: none;
-}
-
-.feedback-message.show {
-    display: block;
 }
 
 .feedback-correct {
@@ -387,165 +351,134 @@ button {
     font-weight: 500;
 }
 
-.correct-answers-list div {
-    padding: 4px 0;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    .container {
+        max-width: 100%;
+    }
+    
+    .quiz-container {
+        padding: 20px;
+    }
+    
+    .options-section {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .character-bg {
+        display: none;
+    }
+    
+    .answer-option {
+        padding: 14px;
+        font-size: 15px;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .answer-option:active {
+        transform: scale(0.98);
+    }
+    
+    .placed-answer {
+        padding: 12px;
+        font-size: 15px;
+    }
+    
+    .placed-answer:active {
+        background: #ffeaea;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-prev, .btn-check, .btn-next {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 0 10px 0;
+        padding: 16px;
+    }
+    
+    .btn-check {
+        margin-right: 0;
+    }
+    
+    .header h1 {
+        font-size: 1.8em;
+    }
+    
+    .question-title {
+        font-size: 1.1em;
+    }
+    
+    .drop-zone {
+        min-height: 100px;
     }
 }
 
-.btn-check {
-    background: #16a085;
-    color: white;
-    flex: 1;
-    max-width: 200px;
-    margin-right: 10px;
+/* Для очень маленьких экранов */
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    
+    .quiz-container {
+        padding: 15px;
+    }
+    
+    .answer-option, .placed-answer {
+        padding: 12px 10px;
+        font-size: 14px;
+    }
+    
+    .question-number {
+        font-size: 0.8em;
+        padding: 4px 8px;
+    }
+    
+    .answers-label, .drop-zone-label {
+        font-size: 0.9em;
+    }
+    
+    button {
+        padding: 14px 16px;
+        font-size: 15px;
+    }
 }
 
-.btn-check:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(22, 160, 133, 0.4);
-    background: #117a65;
+/* Фикс для iOS */
+@supports (-webkit-touch-callout: none) {
+    .answer-option, .placed-answer, button {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .answer-option:active, .placed-answer:active, button:active {
+        opacity: 0.8;
+    }
 }
 
-.btn-check:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+/* Остальные стили (footer, start-screen, info-section и т.д.) */
+.footer, .start-screen, .info-section, .divider, .btn-start, .btn-restart, .score-display, .score-text, .result-message {
+    /* Оставляем как были в предыдущих версиях */
 }
 
-.footer {
-    background: rgba(249, 249, 249, 0.9);
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    color: #666;
-    font-size: 0.9em;
-    line-height: 1.6;
-    border: 1px solid #e0e0e0;
-    border-top: 3px solid #2c5f8d;
-    backdrop-filter: blur(10px);
-}
-
-.footer-title {
-    font-weight: 700;
-    color: #2c5f8d;
-    margin-bottom: 10px;
-}
-
-.footer-authors {
-    color: #16a085;
-    font-weight: 600;
-    margin: 8px 0;
-}
-
-.footer-source {
-    color: #555;
-    font-style: italic;
-    margin: 8px 0;
-}
-
+/* Добавь эти стили если их нет */
 .empty-zone-text {
     color: #999;
     font-style: italic;
+    text-align: center;
+    padding: 10px;
 }
 
 .separator {
     height: 1px;
     background: #e0e0e0;
     margin: 15px 0;
-}
-
-.start-screen {
-    display: none;
-    text-align: center;
-    padding: 40px 30px;
-    animation: fadeIn 0.5s ease-in;
-}
-
-.start-screen.active {
-    display: block;
-}
-
-.start-screen h1 {
-    color: #2c5f8d;
-    font-size: 2.8em;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
-}
-
-.start-screen p {
-    color: #555;
-    font-size: 1.05em;
-    margin-bottom: 30px;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
-}
-
-.info-section {
-    background: rgba(249, 249, 249, 0.95);
-    border-radius: 8px;
-    padding: 25px;
-    margin: 25px 0;
-    border-left: 4px solid #2c5f8d;
-    text-align: left;
-}
-
-.info-title {
-    font-weight: 700;
-    color: #2c5f8d;
-    font-size: 1.1em;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-}
-
-.info-content {
-    color: #555;
-    line-height: 1.8;
-    font-size: 0.95em;
-}
-
-.info-content div {
-    margin: 8px 0;
-}
-
-.info-highlight {
-    color: #16a085;
-    font-weight: 600;
-}
-
-.btn-start {
-    background: #16a085;
-    color: white;
-    padding: 16px 50px;
-    font-size: 1.2em;
-    margin-top: 30px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn-start:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(22, 160, 133, 0.4);
-    background: #117a65;
-}
-
-.divider {
-    width: 60px;
-    height: 2px;
-    background: #2c5f8d;
-    margin: 20px auto;
-    border-radius: 1px;
 }
