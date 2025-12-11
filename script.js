@@ -32,6 +32,64 @@ function detectDevice() {
     console.log('Устройство:', isMobile ? 'Мобильное' : 'ПК');
 }
 
+function checkAnswer() {
+    console.log("checkAnswer вызвана!"); // Для отладки
+    
+    // Получаем текущий вопрос
+    const question = quizData[currentQuestion];
+    
+    // Получаем выбранные пользователем ответы для текущего вопроса
+    const userSelected = userAnswers[currentQuestion] || [];
+    console.log("Выбранные ответы:", userSelected);
+    
+    // Получаем правильные ответы для этого вопроса
+    const correctAnswers = question.answers
+        .filter(ans => ans.correct)
+        .map(ans => ans.text);
+    console.log("Правильные ответы:", correctAnswers);
+    
+    // Сортируем массивы для корректного сравнения
+    const sortedUserAnswers = [...userSelected].sort();
+    const sortedCorrectAnswers = [...correctAnswers].sort();
+    
+    // Сравниваем
+    const isCorrect = JSON.stringify(sortedUserAnswers) === JSON.stringify(sortedCorrectAnswers);
+    console.log("Результат проверки:", isCorrect ? "ПРАВИЛЬНО" : "НЕПРАВИЛЬНО");
+    
+    // Очищаем предыдущий фидбек
+    const feedbackArea = document.getElementById('feedbackArea');
+    feedbackArea.innerHTML = '';
+    
+    // Создаем сообщение
+    const feedback = document.createElement('div');
+    feedback.className = `feedback-message show ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+    
+    if (isCorrect) {
+        feedback.innerHTML = '<strong>✓ Правильно!</strong> Вы выбрали все верные ответы.';
+    } else {
+        let html = '<strong>✗ Неправильно.</strong> Правильные ответы:<div class="correct-answers-list">';
+        correctAnswers.forEach(ans => {
+            html += `<div>• ${ans}</div>`;
+        });
+        html += '</div>';
+        feedback.innerHTML = html;
+    }
+    
+    // Добавляем сообщение на страницу
+    feedbackArea.appendChild(feedback);
+    
+    // Прокручиваем к сообщению
+    setTimeout(() => {
+        feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+    
+    // Делаем кнопку "Следующий" активной и фокусируемся на ней
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) {
+        nextBtn.focus();
+    }
+}
+
 // Настройка обработчиков событий
 function setupEventListeners() {
     document.getElementById('startBtn').addEventListener('click', startQuiz);
@@ -436,3 +494,4 @@ window.dragStart = dragStart;
 window.dragOver = dragOver;
 window.dragLeave = dragLeave;
 window.drop = drop;
+
