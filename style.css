@@ -1,0 +1,1567 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #333;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Стартовый экран */
+.start-screen {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+.start-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.start-header h1 {
+    color: #2c3e50;
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.start-header h2 {
+    color: #3498db;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.quiz-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.info-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid #3498db;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.info-icon {
+    background: #3498db;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.info-content h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.info-content p {
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.info-content span {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.start-footer {
+    text-align: center;
+}
+
+.btn-start {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    padding: 18px 50px;
+    font-size: 1.3rem;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9 0%, #2573a7 100%);
+}
+
+/* Экран квиза */
+.quiz-screen {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.quiz-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 30px 40px;
+}
+
+.quiz-title h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quiz-subtitle {
+    color: #bdc3c7;
+    font-size: 1rem;
+}
+
+.quiz-progress {
+    margin-top: 25px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    font-size: 0.95rem;
+    color: #ecf0f1;
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px 20px;
+    border-radius: 10px;
+    width: auto;
+    margin: 10px auto 0;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.progress-text span {
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 0 5px;
+}
+
+.progress-text span:first-child {
+    font-size: 1.1rem;
+    color: #2ecc71;
+}
+
+.progress-text span:last-child {
+    font-size: 1.1rem;
+    color: #ff9f43;
+}
+
+/* Добавим слова "из" и "вопросов" */
+.progress-text::before {
+    content: 'из';
+    color: #bdc3c7;
+    margin: 0 8px 0 4px;
+    font-weight: 400;
+}
+
+.progress-text::after {
+    content: 'вопросов';
+    color: #bdc3c7;
+    margin: 0 4px 0 8px;
+    font-weight: 400;
+}
+
+.quiz-content {
+    padding: 40px;
+}
+
+.question-block {
+    margin-bottom: 30px;
+    animation: slideIn 0.5s ease;
+}
+
+.question-title {
+    font-size: 1.4rem;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ecf0f1;
+    line-height: 1.5;
+}
+
+.question-number {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-right: 10px;
+    font-weight: 600;
+}
+
+.options-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.available-answers, .drop-zone {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    min-height: 200px;
+}
+
+.answers-label, .drop-zone-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.answers-label i, .drop-zone-label i {
+    color: #3498db;
+}
+
+.answer-option {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    cursor: move;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-weight: 500;
+}
+
+.answer-option:hover {
+    border-color: #3498db;
+    transform: translateX(5px);
+    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.2);
+}
+
+.answer-option.dragging {
+    opacity: 0.7;
+    transform: rotate(2deg);
+}
+
+.answer-option.placed {
+    display: none;
+}
+
+.drop-zone {
+    border: 2px dashed #bdc3c7;
+    display: flex;
+    flex-direction: column;
+}
+
+.drop-zone.drag-over {
+    border-color: #3498db;
+    background: #f0f8ff;
+}
+
+.placed-answer {
+    background: white;
+    border: 2px solid #2ecc71;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeInUp 0.3s ease;
+}
+
+.remove-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+    font-weight: 600;
+}
+
+.remove-btn:hover {
+    background: #c0392b;
+}
+
+.empty-zone-text {
+    color: #95a5a6;
+    font-style: italic;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.btn {
+    padding: 15px 35px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-prev {
+    background: #f8f9fa;
+    color: #2c3e50;
+    border: 2px solid #dfe6e9;
+}
+
+.btn-prev:hover:not(:disabled) {
+    background: #dfe6e9;
+    transform: translateX(-3px);
+}
+
+.btn-next {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    margin-left: auto;
+}
+
+.btn-next:hover:not(:disabled) {
+    transform: translateX(3px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Экран результатов */
+.results-screen {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+.results-header {
+    margin-bottom: 40px;
+}
+
+.results-icon {
+    font-size: 4rem;
+    color: #f39c12;
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+}
+
+.results-header h2 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.results-header p {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+}
+
+.score-display {
+    margin: 40px 0;
+}
+
+.score-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+}
+
+.score-number {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.score-percent {
+    font-size: 1.5rem;
+    opacity: 0.9;
+}
+
+.score-text {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+.result-message {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px 0;
+    font-size: 1.3rem;
+    color: #2c3e50;
+    border-left: 5px solid #3498db;
+}
+
+.results-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.btn-check-answers {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    color: white;
+}
+
+.btn-check-answers:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+}
+
+.btn-restart {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+}
+
+.btn-restart:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+}
+
+/* Подробные результаты */
+.detailed-results {
+    text-align: left;
+    margin-top: 40px;
+    animation: slideIn 0.5s ease;
+}
+
+.result-item {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid #3498db;
+}
+
+.result-item.correct {
+    border-left-color: #2ecc71;
+}
+
+.result-item.incorrect {
+    border-left-color: #e74c3c;
+}
+
+.result-question {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.result-answers {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.user-answer, .correct-answer {
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.user-answer {
+    background: #d5f4e6;
+    color: #27ae60;
+}
+
+.correct-answer {
+    background: #ffebee;
+    color: #e74c3c;
+}
+
+/* Футер */
+.footer {
+    margin-top: 40px;
+    background: #2c3e50;
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.footer-section h4 {
+    color: #3498db;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+}
+
+.footer-section p {
+    color: #bdc3c7;
+    line-height: 1.8;
+    margin-bottom: 10px;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .options-section {
+        grid-template-columns: 1fr;
+    }
+
+    .quiz-header {
+        padding: 20px;
+    }
+
+    .quiz-content {
+        padding: 20px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .results-actions {
+        flex-direction: column;
+    }
+}
+
+/* Фоновые изображения */
+.background-images {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.bg-image {
+    position: absolute;
+    opacity: 0.4; /* Увеличил с 0.15 до 0.4 */
+    filter: sepia(0.4) brightness(0.85) contrast(1.1) saturate(1.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    object-fit: cover;
+    transition: all 0.5s ease;
+    z-index: 1;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.bg-image:hover {
+    opacity: 0.6;
+    transform: scale(1.08);
+    filter: sepia(0.3) brightness(0.9) contrast(1.2) saturate(1.2);
+}
+
+/* Затемнение фона для лучшей читаемости текста */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7); /* Увеличил прозрачность */
+    z-index: -1;
+    backdrop-filter: blur(2px);
+}
+
+/* Обновление цвета фона body */
+body {
+    background: linear-gradient(135deg, rgba(240, 242, 245, 0.95) 0%, rgba(225, 228, 232, 0.95) 100%);
+    position: relative;
+}
+
+/* Расположение и размеры изображений - оптимизировано чтобы не перекрывались */
+.bg-image-1 {
+    top: 5%;
+    left: 3%;
+    width: 180px;
+    height: 135px;
+    transform: rotate(-5deg);
+    animation: float1 45s ease-in-out infinite;
+}
+
+.bg-image-2 {
+    top: 12%;
+    right: 5%;
+    width: 160px;
+    height: 120px;
+    transform: rotate(3deg);
+    animation: float2 40s ease-in-out infinite 5s;
+}
+
+.bg-image-3 {
+    top: 40%;
+    left: 2%;
+    width: 200px;
+    height: 150px;
+    transform: rotate(-8deg);
+    animation: float3 50s ease-in-out infinite 10s;
+}
+
+.bg-image-4 {
+    bottom: 15%;
+    right: 3%;
+    width: 170px;
+    height: 128px;
+    transform: rotate(5deg);
+    animation: float4 42s ease-in-out infinite 15s;
+}
+
+.bg-image-5 {
+    top: 65%;
+    left: 5%;
+    width: 150px;
+    height: 113px;
+    transform: rotate(-3deg);
+    animation: float5 47s ease-in-out infinite 20s;
+}
+
+.bg-image-6 {
+    bottom: 8%;
+    right: 8%;
+    width: 190px;
+    height: 143px;
+    transform: rotate(7deg);
+    animation: float6 38s ease-in-out infinite 25s;
+}
+
+.bg-image-7 {
+    top: 25%;
+    right: 12%;
+    width: 165px;
+    height: 124px;
+    transform: rotate(-2deg);
+    animation: float7 43s ease-in-out infinite 30s;
+}
+
+.bg-image-8 {
+    top: 55%;
+    right: 10%;
+    width: 175px;
+    height: 131px;
+    transform: rotate(6deg);
+    animation: float8 44s ease-in-out infinite 35s;
+}
+
+.bg-image-9 {
+    bottom: 3%;
+    left: 7%;
+    width: 195px;
+    height: 146px;
+    transform: rotate(-6deg);
+    animation: float9 41s ease-in-out infinite 40s;
+}
+
+/* Анимации плавающих изображений */
+@keyframes float1 {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    33% { transform: translateY(-15px) translateX(10px) rotate(-5deg); }
+    66% { transform: translateY(10px) translateX(-5px) rotate(-5deg); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translateY(0) rotate(3deg); }
+    33% { transform: translateY(-12px) translateX(-8px) rotate(3deg); }
+    66% { transform: translateY(8px) translateX(5px) rotate(3deg); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translateY(0) rotate(-8deg); }
+    33% { transform: translateY(-18px) translateX(7px) rotate(-8deg); }
+    66% { transform: translateY(12px) translateX(-3px) rotate(-8deg); }
+}
+
+@keyframes float4 {
+    0%, 100% { transform: translateY(0) rotate(5deg); }
+    33% { transform: translateY(-14px) translateX(-6px) rotate(5deg); }
+    66% { transform: translateY(9px) translateX(4px) rotate(5deg); }
+}
+
+@keyframes float5 {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    33% { transform: translateY(-10px) translateX(3px) rotate(-3deg); }
+    66% { transform: translateY(6px) translateX(-2px) rotate(-3deg); }
+}
+
+@keyframes float6 {
+    0%, 100% { transform: translateY(0) rotate(7deg); }
+    33% { transform: translateY(-16px) translateX(-9px) rotate(7deg); }
+    66% { transform: translateY(11px) translateX(6px) rotate(7deg); }
+}
+
+@keyframes float7 {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    33% { transform: translateY(-13px) translateX(4px) rotate(-2deg); }
+    66% { transform: translateY(8px) translateX(-1px) rotate(-2deg); }
+}
+
+@keyframes float8 {
+    0%, 100% { transform: translateY(0) rotate(6deg); }
+    33% { transform: translateY(-15px) translateX(-7px) rotate(6deg); }
+    66% { transform: translateY(10px) translateX(5px) rotate(6deg); }
+}
+
+@keyframes float9 {
+    0%, 100% { transform: translateY(0) rotate(-6deg); }
+    33% { transform: translateY(-17px) translateX(8px) rotate(-6deg); }
+    66% { transform: translateY(13px) translateX(-4px) rotate(-6deg); }
+}
+
+/* Затемнение фона для лучшей читаемости текста */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: -1;
+}
+
+/* Обновление цвета фона body */
+body {
+    background: linear-gradient(135deg, rgba(248, 249, 250, 0.9) 0%, rgba(233, 236, 239, 0.9) 100%);
+    position: relative;
+}
+
+/* Убедимся, что основной контент поверх фоновых изображений */
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+/* В конец style.css добавьте: */
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .options-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .mobile-hint {
+        display: inline;
+        font-size: 0.8rem;
+        color: #7f8c8d;
+        margin-left: 10px;
+        font-weight: normal;
+    }
+
+    .desktop-hint {
+        display: none;
+    }
+
+    /* Стили для мобильных ответов */
+    .mobile-answer {
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        border: 2px solid #3498db;
+        position: relative;
+        padding-right: 50px;
+    }
+
+    .mobile-answer .select-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #3498db;
+        opacity: 0.5;
+        transition: opacity 0.3s;
+    }
+
+    .mobile-answer:hover .select-icon,
+    .mobile-answer.selected .select-icon {
+        opacity: 1;
+    }
+
+    .mobile-answer.selected {
+        background: #d5f4e6;
+        border-color: #2ecc71;
+        color: #27ae60;
+    }
+
+    .mobile-answer.touching {
+        transform: scale(0.98);
+        transition: transform 0.1s;
+    }
+
+    .mobile-placed-answer {
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        position: relative;
+        padding-right: 50px;
+    }
+
+    .mobile-placed-answer .remove-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #e74c3c;
+        font-size: 1.1rem;
+    }
+
+    .mobile-placed-answer:active {
+        background: #ffeaea;
+        transform: scale(0.98);
+        transition: transform 0.1s;
+    }
+
+    /* Убираем кнопку удалить на мобильных */
+    .mobile-placed-answer .remove-btn {
+        display: none;
+    }
+
+    /* Увеличиваем размер элементов для удобства касания */
+    .answer-option, .placed-answer {
+        padding: 18px 20px;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+
+    .remove-icon {
+        font-size: 1.2rem;
+    }
+}
+
+/* Для десктопов */
+@media (min-width: 769px) {
+    .mobile-hint {
+        display: none;
+    }
+
+    .desktop-hint {
+        display: inline;
+        font-size: 0.8rem;
+        color: #7f8c8d;
+        margin-left: 10px;
+        font-weight: normal;
+    }
+
+    .mobile-answer .select-icon {
+        display: none;
+    }
+}
+
+/* Адаптация кнопок для мобильных */
+@media (max-width: 768px) {
+    .button-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 20px;
+        font-size: 1.2rem;
+    }
+
+    .quiz-header {
+        padding: 20px;
+    }
+
+    .quiz-content {
+        padding: 20px;
+    }
+
+    .start-screen,
+    .quiz-container,
+    .results-screen {
+        padding: 20px;
+    }
+
+    .quiz-info {
+        grid-template-columns: 1fr;
+    }
+
+    /* Улучшаем отображение фоновых изображений на мобильных */
+    .bg-image {
+        opacity: 0.3;
+        filter: sepia(0.3) brightness(0.8) contrast(1.1);
+        width: 120px !important;
+        height: 90px !important;
+    }
+
+    /* Скрываем некоторые изображения на очень маленьких экранах */
+    @media (max-width: 480px) {
+        .bg-image-4, .bg-image-7, .bg-image-9 {
+            display: none;
+        }
+    }
+}
+
+/* Улучшаем скролл на мобильных */
+@media (max-width: 768px) {
+    .available-answers,
+    .drop-zone {
+        max-height: 300px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .question-title {
+        font-size: 1.2rem;
+        line-height: 1.4;
+    }
+}
+
+/* ========== FLEXBOX КОНТЕЙНЕРЫ ========== */
+
+/* Основные Flex-контейнеры */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Стартовый экран - FlexBox */
+.start-screen {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.start-header {
+    text-align: center;
+    margin-bottom: 40px;
+    flex-shrink: 0;
+}
+
+.quiz-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-bottom: 40px;
+    flex: 1;
+}
+
+.info-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid #3498db;
+    flex: 1;
+    min-width: 300px;
+}
+
+.start-footer {
+    text-align: center;
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+/* Экран квиза - FlexBox */
+.quiz-screen {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.quiz-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 30px 40px;
+    flex-shrink: 0;
+}
+
+.quiz-content {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.question-block {
+    margin-bottom: 30px;
+    animation: slideIn 0.5s ease;
+    flex: 1;
+}
+
+/* Options-section с FlexBox */
+.options-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex: 1;
+}
+
+.available-answers, .drop-zone {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    min-height: 200px;
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Контейнер для ответов внутри колонок */
+#availableAnswers, #placedAnswers {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 150px;
+}
+
+/* Ответы в FlexBox */
+.answer-option {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    cursor: move;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+/* Выбранные ответы в FlexBox */
+.placed-answer {
+    background: white;
+    border: 2px solid #2ecc71;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeInUp 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* Кнопки в FlexBox */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+.btn {
+    padding: 15px 35px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.btn-prev {
+    background: #f8f9fa;
+    color: #2c3e50;
+    border: 2px solid #dfe6e9;
+    order: 1;
+}
+
+.btn-next {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    order: 3;
+}
+
+.btn-check-answers, .btn-restart {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Экран результатов - FlexBox */
+.results-screen {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.results-header {
+    margin-bottom: 40px;
+    flex-shrink: 0;
+}
+
+.score-display {
+    margin: 40px 0;
+    flex-shrink: 0;
+}
+
+.results-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: auto;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+/* Footer в FlexBox */
+.footer {
+    margin-top: 40px;
+    background: #2c3e50;
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    flex: 1;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* ========== АДАПТИВНЫЕ МЕДИА-ЗАПРОСЫ ========== */
+
+/* Для планшетов */
+@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    .quiz-info {
+        flex-direction: column;
+    }
+
+    .info-card {
+        min-width: 100%;
+    }
+
+    .options-section {
+        flex-direction: column;
+    }
+
+    .available-answers, .drop-zone {
+        min-width: 100%;
+    }
+
+    .results-actions {
+        flex-direction: column;
+    }
+
+    .btn-check-answers, .btn-restart {
+        min-width: 100%;
+    }
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .start-screen,
+    .quiz-screen,
+    .results-screen {
+        padding: 20px;
+    }
+
+    .quiz-header {
+        padding: 20px;
+    }
+
+    .quiz-content {
+        padding: 20px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: 100%;
+        padding: 20px;
+        font-size: 1.2rem;
+    }
+
+    .btn-prev, .btn-next {
+        order: 0;
+    }
+
+    .footer-content {
+        flex-direction: column;
+    }
+
+    .footer-section {
+        min-width: 100%;
+    }
+
+    /* Адаптация FlexBox для мобильных ответов */
+    .mobile-answer {
+        flex: 1 0 auto;
+    }
+
+    .mobile-placed-answer {
+        flex: 1 0 auto;
+    }
+
+    /* Улучшаем скролл с FlexBox */
+    .available-answers,
+    .drop-zone {
+        max-height: 300px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        flex: 1 1 auto;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 480px) {
+    .info-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .info-icon {
+        margin-bottom: 15px;
+    }
+
+    .question-title {
+        font-size: 1.1rem;
+        line-height: 1.3;
+    }
+
+    .answers-label, .drop-zone-label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .mobile-hint, .desktop-hint {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+
+    .progress-text {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 6px 12px;
+    }
+}
+
+/* Для горизонтальной ориентации на мобильных */
+@media (max-height: 600px) and (orientation: landscape) {
+    .start-screen,
+    .quiz-screen,
+    .results-screen {
+        padding: 15px;
+    }
+
+    .quiz-header {
+        padding: 15px;
+    }
+
+    .available-answers,
+    .drop-zone {
+        min-height: 150px;
+        max-height: 200px;
+    }
+
+    .answer-option,
+    .placed-answer {
+        padding: 12px 15px;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .question-title {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+}
+
+/* Для больших экранов (4K и выше) */
+@media (min-width: 2000px) {
+    .container {
+        max-width: 1600px;
+    }
+
+    .info-card {
+        min-width: 400px;
+    }
+
+    .available-answers,
+    .drop-zone {
+        min-width: 500px;
+    }
+
+    .btn {
+        min-width: 200px;
+        padding: 20px 45px;
+        font-size: 1.3rem;
+    }
+}
+
+/* ========== FLEXBOX УТИЛИТЫ ========== */
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-around {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-auto {
+    flex: auto;
+}
+
+.flex-none {
+    flex: none;
+}
+
+.flex-shrink-0 {
+    flex-shrink: 0;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+/* Для всех мобильных устройств скрываем иконки плюсов */
+@media (max-width: 768px) {
+    .mobile-answer .select-icon {
+        display: none;
+    }
+
+    .mobile-placed-answer .remove-icon {
+        display: none;
+    }
+
+    .mobile-answer {
+        padding-right: 20px;
+    }
+
+    .mobile-placed-answer {
+        padding-right: 20px;
+    }
+
+    /* Вместо иконок добавляем цветовую индикацию */
+    .mobile-answer.selected {
+        background: linear-gradient(to right, #d5f4e6 0%, #d5f4e6 100%);
+        border-left: 5px solid #2ecc71;
+    }
+
+    .mobile-placed-answer {
+        border-left: 5px solid #e74c3c;
+        background: linear-gradient(to right, #ffeaea 0%, #ffeaea 100%);
+    }
+}
